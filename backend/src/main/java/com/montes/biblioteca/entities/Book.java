@@ -2,12 +2,11 @@ package com.montes.biblioteca.entities;
 
 import java.io.Serializable;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -19,13 +18,11 @@ public class Book implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
+
+    @Column(columnDefinition = "TEXT")
     private String sinopse;
     private Integer publicationYear;
     private String imgUrl;
-
-    @ManyToOne
-    @JoinColumn(name = "library_id")
-    private Library library;
 
     public Book() {
     }
@@ -77,10 +74,6 @@ public class Book implements Serializable {
 
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
-    }
-
-    public void setLibrary(Library library) {
-        this.library = library;
     }
 
 }

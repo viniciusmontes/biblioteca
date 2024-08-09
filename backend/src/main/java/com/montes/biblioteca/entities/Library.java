@@ -1,16 +1,11 @@
 package com.montes.biblioteca.entities;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -23,10 +18,6 @@ public class Library implements Serializable {
     private Long id;
     private String name;
     private String address;
-
-    @OneToMany(mappedBy = "library", fetch = FetchType.EAGER)
-private List<Book> books = new ArrayList<>();
-
 
     public Library() {
     };
@@ -61,11 +52,4 @@ private List<Book> books = new ArrayList<>();
         this.address = address;
     }
 
-    public List<Book> getBooks() {
-        return books;
-    }
-
-    public int getTotalBooks() {
-        return getBooks().size();
-    }
 }
