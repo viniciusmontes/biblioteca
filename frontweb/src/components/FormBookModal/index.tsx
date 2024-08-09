@@ -1,39 +1,62 @@
-import { useForm } from 'react-hook-form';
+import { useForm } from "react-hook-form";
 import { BookDTO } from "../../models/book";
-import * as bookService from "../../services/book-service";
-import './styles.css';
+import "./styles.css";
+import { useEffect } from "react";
+import { AxiosRequestConfig } from "axios";
+import { requestBackend } from "../../utils/requests";
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
+  book: BookDTO | null;
   onBookAdded: (book: BookDTO) => void;
+  onBookUpdated: (book: BookDTO) => void;
 };
 
-type FormInputs = {
-  title: string;
-  sinopse: string;
-  publicationYear: number;
-  imgUrl: string;
-};
+export default function FormBookModal({
+  isOpen,
+  onClose,
+  book,
+  onBookAdded,
+  onBookUpdated
+}: Props) {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors },
+  } = useForm<BookDTO>();
 
-export default function FormBookModal({ isOpen, onClose, onBookAdded }: Props) {
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<FormInputs>();
+  useEffect(() => {
+    if (book) {
+      setValue("title", book.title);
+      setValue("sinopse", book.sinopse);
+      setValue("imgUrl", book.imgUrl);
+      setValue("publicationYear", book.publicationYear);
+    } else {
+      reset();  // Reset the form if it's a new book creation
+    }
+  }, [book, setValue, reset]);
 
   if (!isOpen) return null;
 
-  function onSubmit(data: FormInputs) {
-    const newBook: BookDTO = {
-      id: "", // O backend deve gerar o ID
-      title: data.title,
-      sinopse: data.sinopse,
-      publicationYear: data.publicationYear,
-      imgUrl: data.imgUrl,
+  function onSubmit(formData: BookDTO) {
+    const config: AxiosRequestConfig = {
+      method: book ? "PUT" : "POST",
+      url: book ? `/books/${book.id}` : "/books",
+      data: formData,
+      withCredentials: true,
     };
 
-    bookService.insertRequest(newBook).then((response) => {
-      onBookAdded(response.data);
+    requestBackend(config).then((response) => {
+      if (book) {
+        onBookUpdated(response.data);
+      } else {
+        onBookAdded(response.data);
+      }
       onClose();
-      reset(); // Reseta o formulário após o envio
+      reset();
     });
   }
 
@@ -41,7 +64,7 @@ export default function FormBookModal({ isOpen, onClose, onBookAdded }: Props) {
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h2>Add New Book</h2>
+          <h2>{book ? "Editar livro" : "Adicionar livro"}</h2>
           <button className="close-button" onClick={onClose}>
             &times;
           </button>
@@ -49,38 +72,41 @@ export default function FormBookModal({ isOpen, onClose, onBookAdded }: Props) {
         <div className="modal-body">
           <form onSubmit={handleSubmit(onSubmit)} className="add-book-form">
             <div className="form-group">
-              <label>Title:</label>
-              <input
-                type="text"
-                {...register("title", { required: true })}
-              />
-              {errors.title && <span className="error-message">Title is required</span>}
+              <label>Titulo:</label>
+              <input type="text" {...register("title", { required: true })} />
+              {errors.title && (
+                <span className="error-message">Inserir o titulo</span>
+              )}
             </div>
             <div className="form-group">
-              <label>Synopsis:</label>
-              <textarea
-                {...register("sinopse", { required: true })}
-              />
-              {errors.sinopse && <span className="error-message">Synopsis is required</span>}
+              <label>Resumo:</label>
+              <textarea {...register("sinopse", { required: true })} />
+              {errors.sinopse && (
+                <span className="error-message">Inserir o resumo do livro</span>
+              )}
             </div>
             <div className="form-group">
-              <label>Publication Year:</label>
+              <label>Ano:</label>
               <input
                 type="number"
-                {...register("publicationYear", { required: true, valueAsNumber: true })}
+                {...register("publicationYear", {
+                  required: true,
+                  valueAsNumber: true,
+                })}
               />
-              {errors.publicationYear && <span className="error-message">Publication Year is required</span>}
+              {errors.publicationYear && (
+                <span className="error-message">
+                  Inserir o ano de publicação
+                </span>
+              )}
             </div>
             <div className="form-group">
-              <label>Image URL:</label>
-              <input
-                type="text"
-                {...register("imgUrl")}
-              />
+              <label>Imagem da capa:</label>
+              <input type="text" {...register("imgUrl")} />
             </div>
             <div className="modal-footer">
               <button type="submit" className="save-button">
-                Save
+                Salvar
               </button>
             </div>
           </form>

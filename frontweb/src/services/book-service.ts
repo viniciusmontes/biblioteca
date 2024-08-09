@@ -21,3 +21,14 @@ export function findAll() {
   };
   return requestBackend(config);
 }
+
+export function deleteById(id: number) {
+  const config: AxiosRequestConfig = {
+    method: "DELETE",
+    url: `/books/${id}`,
+    withCredentials: true,
+  };
+
+  return requestBackend(config);
+}
+
