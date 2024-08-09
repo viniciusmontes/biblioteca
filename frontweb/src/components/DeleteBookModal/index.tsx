@@ -15,13 +15,13 @@ export default function DeleteBookModal({ isOpen, onClose, onDelete }: DeleteBoo
     <div className="modal-overlay">
       <div className="modal-container">
         <h2>Confirm Delete</h2>
-        <p>Are you sure you want to delete this book?</p>
+        <p>Tem certeza que deseja deletar esse livro ?</p>
         <div className="modal-buttons">
           <button onClick={onDelete} className="confirm-button">
-            Yes, Delete
+            Sim, excluir
           </button>
           <button onClick={onClose} className="cancel-button">
-            Cancel
+            Cancelar
           </button>
         </div>
       </div>
