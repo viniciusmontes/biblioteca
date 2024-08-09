@@ -11,6 +11,10 @@ type Props = {
 export default function ViewBookModal({ book, isOpen, onClose }: Props) {
   if (!isOpen) return null;
 
+  function cutLongSinopse(sinopse : string) {
+    return sinopse.substring(0, 280).concat("...")
+  }
+
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -25,7 +29,7 @@ export default function ViewBookModal({ book, isOpen, onClose }: Props) {
             <img src={book.imgUrl} alt={book.title}/>
           </div>
           <p>
-            <strong>Synopsis:</strong> {book.sinopse}
+            <strong>Synopsis:</strong> {cutLongSinopse(book.sinopse)}
           </p>
           <p>
             <strong>Publication Year:</strong> {book.publicationYear}
