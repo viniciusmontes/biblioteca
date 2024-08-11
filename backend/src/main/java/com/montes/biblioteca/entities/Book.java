@@ -7,6 +7,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -23,11 +25,16 @@ public class Book implements Serializable {
     private String sinopse;
     private Integer publicationYear;
     private String imgUrl;
+    private Boolean borrowed;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User borrowedBy;
 
     public Book() {
     }
 
-    public Book(Long id, String title, String sinopse, Integer publicationYear, String imgUrl) {
+    public Book(Long id, String title, String sinopse, Integer publicationYear, String imgUrl, Boolean borrowed) {
         this.id = id;
         this.title = title;
         this.sinopse = sinopse;
@@ -74,6 +81,22 @@ public class Book implements Serializable {
 
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
+    }
+
+    public boolean isBorrowed() {
+        return borrowed;
+    }
+
+    public void setBorrowed(boolean borrowed) {
+        this.borrowed = borrowed;
+    }
+
+    public User getBorrowedBy() {
+        return borrowedBy;
+    }
+
+    public void setBorrowedBy(User borrowedBy) {
+        this.borrowedBy = borrowedBy;
     }
 
 }
