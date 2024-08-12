@@ -50,7 +50,7 @@
 
 .add-book-form input,
 .add-book-form textarea {
-  width: 480px;
+  width: 380px;
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;
@@ -73,7 +73,7 @@
 }
 
 .save-button {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   padding: 10px 20px;
   border: none;

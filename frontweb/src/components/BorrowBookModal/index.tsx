@@ -2,6 +2,7 @@ import { useState } from "react";
 import * as bookService from "../../services/book-service";
 import { BookDTO } from "../../models/book";
 import "./styles.css";
+import { toast } from "react-toastify";
 
 type BorrowBookModalProps = {
   isOpen: boolean;
@@ -21,11 +22,11 @@ export default function BorrowBookModal({
       bookService
         .borrowBook(book.id, Number(userId))
         .then(() => {
-          alert("Livro emprestado com sucesso!");
+          toast.success("Livro emprestado com sucesso!");
           onClose();
         })
-        .catch((error) => {
-          alert("Erro ao emprestar o livro: " + error.message);
+        .catch(() => {
+          toast.error("Erro ao emprestar o livro!");
         });
     }
   };
@@ -39,7 +40,7 @@ export default function BorrowBookModal({
       <div className="modal-content">
         <h2>Emprestar Livro</h2>
         <div className="borrow-book-image-container">
-            <img src={book.imgUrl} alt="" />
+          <img src={book.imgUrl} alt="" />
         </div>
         <p>{`Você deseja emprestar o livro: ${book.title}?`}</p>
         <input
