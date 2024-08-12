@@ -32,3 +32,12 @@ export function deleteById(id: number) {
   return requestBackend(config);
 }
 
+export function borrowBook(bookId: string, userId: number) {
+  const config: AxiosRequestConfig = {
+    method: "POST",
+    url: `/books/${bookId}/borrow/${userId}`,
+    withCredentials: true,
+  };
+
+  return requestBackend(config);
+}

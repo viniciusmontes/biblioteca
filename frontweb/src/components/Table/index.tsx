@@ -1,11 +1,12 @@
 import "./styles.css";
 import { useEffect, useState } from "react";
-import { FaEye, FaTrash } from "react-icons/fa";
+import { FaEye, FaHandHolding, FaTrash } from "react-icons/fa";
 import { BookDTO } from "../../models/book";
 import * as bookService from "../../services/book-service";
 import FormBookModal from "../FormBookModal";
 import ViewBookModal from "../ViewBookModal";
 import DeleteBookModal from "../DeleteBookModal";
+import BorrowBookModal from "../BorrowBookModal";
 
 export default function Table() {
   const [books, setBooks] = useState<BookDTO[]>([]);
@@ -13,6 +14,7 @@ export default function Table() {
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isBorrowModalOpen, setIsBorrowModalOpen] = useState(false);
 
   useEffect(() => {
     bookService.findAll().then((response) => {
@@ -74,6 +76,16 @@ export default function Table() {
     }
   };
 
+  const openBorrowModal = (book: BookDTO) => {
+    setSelectedBook(book);
+    setIsBorrowModalOpen(true);
+  };
+
+  const closeBorrowModal = () => {
+    setIsBorrowModalOpen(false);
+    setSelectedBook(null);
+  };
+
   return (
     <div className="table-container">
       <div className="button-container">
@@ -89,6 +101,7 @@ export default function Table() {
               <th>Ano</th>
               <th>Editar</th>
               <th>Vizualizar</th>
+              <th>Emprestar</th>
               <th>Excluir</th>
             </tr>
           </thead>
@@ -111,6 +124,14 @@ export default function Table() {
                     className="view-button"
                   >
                     <FaEye />
+                  </button>
+                </td>
+                <td>
+                  <button
+                    onClick={() => openBorrowModal(book)}
+                    className="borrow-button"
+                  >
+                    <FaHandHolding />
                   </button>
                 </td>
                 <td>
@@ -151,6 +172,13 @@ export default function Table() {
           isOpen={isDeleteModalOpen}
           onClose={closeDeleteModal}
           onDelete={handleDeleteBook}
+        />
+      )}
+      {isBorrowModalOpen && (
+        <BorrowBookModal
+          isOpen={isBorrowModalOpen}
+          onClose={closeBorrowModal}
+          book={selectedBook}
         />
       )}
     </div>
